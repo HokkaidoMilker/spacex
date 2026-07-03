@@ -355,8 +355,11 @@ def render_chat():
                     })
 
                 except Exception as e:
-                    error_msg = f"请求失败: {e}"
-                    st.error(error_msg)
+                    import traceback
+                    error_msg = traceback.format_exc()
+                    st.error(f"请求失败: {e}")
+                    with st.expander("🔧 错误详情（调试用）"):
+                        st.code(error_msg)
                     st.session_state.messages.append({
                         "role": "assistant",
                         "content": f"抱歉，处理请求时出错：{e}",
