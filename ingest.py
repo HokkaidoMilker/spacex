@@ -17,7 +17,6 @@ from langchain_community.document_loaders import (
 )
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_chroma import Chroma
 
 from config import (
@@ -26,8 +25,7 @@ from config import (
     CHROMA_COLLECTION_NAME,
     CHUNK_SIZE,
     CHUNK_OVERLAP,
-    EMBEDDING_MODEL,
-    DASHSCOPE_API_KEY,
+    get_embeddings,
 )
 
 
@@ -101,17 +99,15 @@ def split_documents(docs: List) -> List:
     return chunks
 
 
-def create_embeddings() -> DashScopeEmbeddings:
-    """创建阿里云 DashScope Embeddings 实例。
+def create_embeddings():
+    """创建免费本地 FastEmbed 实例。
 
     Returns:
-        DashScopeEmbeddings 实例
+        FastEmbedEmbeddings 实例，无需 API Key
     """
-    print(f"[Embedding] 使用 DashScope 模型: {EMBEDDING_MODEL}...")
-    return DashScopeEmbeddings(
-        model=EMBEDDING_MODEL,
-        dashscope_api_key=DASHSCOPE_API_KEY,
-    )
+    from config import EMBEDDING_MODEL
+    print(f"[Embedding] 使用本地模型: {EMBEDDING_MODEL}（首次运行会下载 ~100MB）...")
+    return get_embeddings()
 
 
 def ingest(reset: bool = False) -> None:

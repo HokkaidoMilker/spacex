@@ -180,9 +180,8 @@ def render_sidebar():
                     # 检查向量库是否为空（仅占位文档）
                     try:
                         from langchain_chroma import Chroma
-                        from langchain_community.embeddings import DashScopeEmbeddings
-                        from config import EMBEDDING_MODEL, DASHSCOPE_API_KEY
-                        emb = DashScopeEmbeddings(model=EMBEDDING_MODEL, dashscope_api_key=DASHSCOPE_API_KEY)
+                        from config import get_embeddings
+                        emb = get_embeddings()
                         db = Chroma(
                             collection_name=CHROMA_COLLECTION_NAME,
                             embedding_function=emb,
@@ -207,9 +206,8 @@ def render_sidebar():
         if os.path.isdir(CHROMA_DB_PATH):
             try:
                 from langchain_chroma import Chroma
-                from langchain_community.embeddings import DashScopeEmbeddings
-                from config import EMBEDDING_MODEL, DASHSCOPE_API_KEY
-                emb = DashScopeEmbeddings(model=EMBEDDING_MODEL, dashscope_api_key=DASHSCOPE_API_KEY)
+                from config import get_embeddings
+                emb = get_embeddings()
                 db = Chroma(
                     collection_name=CHROMA_COLLECTION_NAME,
                     embedding_function=emb,

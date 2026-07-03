@@ -56,10 +56,11 @@ DEEPSEEK_API_KEY = _get_secret("DEEPSEEK_API_KEY")
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 
 # ============================================================
-# Embedding 模型（阿里云 DashScope API）
+# Embedding 模型（免费本地 FastEmbed，无需 API Key）
 # ============================================================
-EMBEDDING_MODEL = "text-embedding-v2"
-DASHSCOPE_API_KEY = _get_secret("DASHSCOPE_API_KEY")
+# FastEmbed 使用 ONNX 模型本地运行，首次运行会自动下载模型（~100MB）
+# 支持中英文：BAAI/bge-small-zh-v1.5
+EMBEDDING_MODEL = "BAAI/bge-small-zh-v1.5"
 
 # ============================================================
 # 路径配置
@@ -109,6 +110,19 @@ SPACE_TICKERS = [
 # ============================================================
 # 辅助函数
 # ============================================================
+def get_embeddings():
+    """创建 FastEmbed 本地 Embedding 实例（免费，无需 API Key）。
+
+    FastEmbed 使用 ONNX 模型本地运行，首次调用会自动下载模型缓存。
+    模型约 100MB，下载一次后缓存复用。
+
+    Returns:
+        FastEmbedEmbeddings 实例，兼容 LangChain 检索器接口
+    """
+    from langchain_community.embeddings import FastEmbedEmbeddings
+    return FastEmbedEmbeddings(model_name=EMBEDDING_MODEL)
+
+
 def load_prompt(filename: str) -> str:
     """从 prompts/ 目录加载提示词文件内容。
 

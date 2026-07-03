@@ -10,7 +10,6 @@ from langchain_classic.chains import ConversationalRetrievalChain
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from langchain_openai import ChatOpenAI
 from langchain_chroma import Chroma
-from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.tools import StructuredTool
@@ -19,8 +18,6 @@ from config import (
     LLM_MODEL,
     DEEPSEEK_API_KEY,
     DEEPSEEK_BASE_URL,
-    EMBEDDING_MODEL,
-    DASHSCOPE_API_KEY,
     CHROMA_DB_PATH,
     CHROMA_COLLECTION_NAME,
     RETRIEVER_K,
@@ -29,6 +26,7 @@ from config import (
     ENABLE_WEB_SEARCH,
     ENABLE_STOCK_LOOKUP,
     load_prompt,
+    get_embeddings,
 )
 
 
@@ -50,16 +48,13 @@ def _create_llm(temperature: float = 0.3) -> ChatOpenAI:
     )
 
 
-def _create_embeddings() -> DashScopeEmbeddings:
-    """创建阿里云 DashScope Embeddings 实例。
+def _create_embeddings():
+    """创建免费本地 FastEmbed 实例。
 
     Returns:
-        DashScopeEmbeddings 实例
+        FastEmbedEmbeddings 实例，无需 API Key
     """
-    return DashScopeEmbeddings(
-        model=EMBEDDING_MODEL,
-        dashscope_api_key=DASHSCOPE_API_KEY,
-    )
+    return get_embeddings()
 
 
 def _load_vectorstore() -> Chroma:
