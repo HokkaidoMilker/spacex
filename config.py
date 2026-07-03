@@ -22,8 +22,9 @@ def _get_secret(key: str, default: str = "") -> str:
         default: 默认值
 
     Returns:
-        配置值
+        配置值（已清理不可见 Unicode 字符）
     """
+    val = default
     try:
         import streamlit as st
         # st.secrets 可能是 dict-like 或 AttrDict，多种方式尝试
@@ -31,21 +32,36 @@ def _get_secret(key: str, default: str = "") -> str:
         if secrets is not None:
             # 方式 1: dict-style access
             try:
-                val = secrets[key]
-                if val:
-                    return str(val)
+                v = secrets[key]
+                if v:
+                    val = str(v)
             except (KeyError, TypeError):
                 pass
             # 方式 2: attribute-style access
-            try:
-                val = getattr(secrets, key, None)
-                if val:
-                    return str(val)
-            except (TypeError, AttributeError):
-                pass
+            if not val or val == default:
+                try:
+                    v = getattr(secrets, key, None)
+                    if v:
+                        val = str(v)
+                except (TypeError, AttributeError):
+                    pass
     except Exception:
         pass
-    return os.getenv(key, default)
+
+    if not val or val == default:
+        val = os.getenv(key, default)
+
+    # 清理复制粘贴时混入的不可见字符（non-breaking space 等）
+    if val:
+        val = (
+            val.strip()
+               .replace("\xa0", "")
+               .replace("​", "")
+               .replace("‌", "")
+               .replace("‍", "")
+               .replace("﻿", "")
+        )
+    return val
 
 
 # ============================================================
