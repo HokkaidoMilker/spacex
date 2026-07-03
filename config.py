@@ -26,8 +26,23 @@ def _get_secret(key: str, default: str = "") -> str:
     """
     try:
         import streamlit as st
-        if hasattr(st, "secrets") and key in st.secrets:
-            return st.secrets[key]
+        # st.secrets 可能是 dict-like 或 AttrDict，多种方式尝试
+        secrets = st.secrets if hasattr(st, "secrets") else None
+        if secrets is not None:
+            # 方式 1: dict-style access
+            try:
+                val = secrets[key]
+                if val:
+                    return str(val)
+            except (KeyError, TypeError):
+                pass
+            # 方式 2: attribute-style access
+            try:
+                val = getattr(secrets, key, None)
+                if val:
+                    return str(val)
+            except (TypeError, AttributeError):
+                pass
     except Exception:
         pass
     return os.getenv(key, default)

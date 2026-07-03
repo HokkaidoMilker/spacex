@@ -136,8 +136,9 @@ def build_rag_chain() -> Tuple[ConversationalRetrievalChain, Any]:
     # 校验 API Key
     if not DEEPSEEK_API_KEY:
         raise ValueError(
-            "DEEPSEEK_API_KEY 未设置。请将 API Key 写入 .env 文件：\n"
-            "  DEEPSEEK_API_KEY=sk-xxxxx"
+            "DEEPSEEK_API_KEY 未设置。\n"
+            "本地开发：写入 .env 文件 → DEEPSEEK_API_KEY=sk-xxxxx\n"
+            "Streamlit Cloud：Manage app → Secrets → 填入 TOML 格式密钥后 Reboot"
         )
 
     # 1. 加载向量库
@@ -293,8 +294,9 @@ def build_agent() -> Tuple[AgentExecutor, Any]:
     # 校验 API Key
     if not DEEPSEEK_API_KEY:
         raise ValueError(
-            "DEEPSEEK_API_KEY 未设置。请将 API Key 写入 .env 文件：\n"
-            "  DEEPSEEK_API_KEY=sk-xxxxx"
+            "DEEPSEEK_API_KEY 未设置。\n"
+            "本地开发：写入 .env 文件 → DEEPSEEK_API_KEY=sk-xxxxx\n"
+            "Streamlit Cloud：Manage app → Secrets → 填入 TOML 格式密钥后 Reboot"
         )
 
     # 1. 加载向量库 & 创建检索器
