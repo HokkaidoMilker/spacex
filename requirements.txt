@@ -1,31 +1,14 @@
-# ============================================================
-# SpaceX 股票分析问答助手 — Streamlit Cloud 兼容依赖
-# ============================================================
-# Python 3.10+ required
-# 安装: pip install -r requirements.txt
-
-# --- LangChain 核心 ---
-langchain>=0.2.0,<0.4.0
-langchain-classic>=1.0.0
-langchain-core>=1.0.0
-langchain-text-splitters>=1.0.0
-langchain-openai>=0.1.0,<0.3.0
-langchain-community>=0.2.0,<0.4.0
-langchain-chroma>=0.1.0,<0.2.0
-
-# --- Streamlit ---
-streamlit>=1.35.0,<2.0.0
-
-# --- 向量数据库 ---
-chromadb>=0.5.0,<0.6.0
-
-# --- 文档加载 ---
-pypdf>=4.0.0,<6.0.0
-
-# --- 外部工具 ---
+streamlit>=1.35.0
+langchain>=0.3.0
+langchain-classic>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-openai>=0.2.0
+langchain-chroma>=0.2.0
+chromadb>=0.5.0
+pypdf>=4.0.0
 ddgs>=9.0.0
 yfinance>=0.2.40
 beautifulsoup4>=4.12.0
-
-# --- 基础工具 ---
 python-dotenv>=1.0.0
