@@ -15,7 +15,7 @@ import os
 
 from rag_pipeline import build_agent, format_chat_history_for_agent
 from ingest import ingest as run_ingest
-from config import CHROMA_DB_PATH, DOCS_PATH, CHROMA_COLLECTION_NAME, ENABLE_WEB_SEARCH, ENABLE_STOCK_LOOKUP
+from config import CHROMA_DB_PATH, DOCS_PATH, CHROMA_COLLECTION_NAME, ENABLE_WEB_SEARCH, ENABLE_STOCK_LOOKUP, ACCESS_PASSWORD
 
 
 # ============================================================
@@ -373,6 +373,23 @@ def render_chat():
 # ============================================================
 def main():
     init_session()
+
+    # --- 密码门禁（若配置了访问密码） ---
+    if ACCESS_PASSWORD:
+        if "authenticated" not in st.session_state:
+            st.session_state.authenticated = False
+
+        if not st.session_state.authenticated:
+            st.title("🚀 SpaceX 股票分析助手")
+            pwd = st.text_input("请输入访问密码", type="password", placeholder="输入密码后按回车")
+            if pwd:
+                if pwd == ACCESS_PASSWORD:
+                    st.session_state.authenticated = True
+                    st.rerun()
+                else:
+                    st.error("密码错误")
+            st.stop()  # 未认证时停止渲染后续内容
+
     render_sidebar()
 
     # 主区域：欢迎词（仅首次）
