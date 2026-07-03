@@ -193,7 +193,7 @@ def _retrieve_knowledge(query: str) -> str:
     for i, doc in enumerate(docs, 1):
         source = doc.metadata.get("source", "未知")
         page = doc.metadata.get("page", -1)
-        content = doc.page_content[:500]
+        content = doc.page_content[:500].replace("\xa0", " ")
         page_info = f"第 {page + 1} 页" if page >= 0 else ""
         lines.append(f"\n--- 文档 {i}: {source} {page_info} ---")
         lines.append(content)

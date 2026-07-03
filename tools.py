@@ -8,6 +8,27 @@ from typing import Optional
 from config import WEB_SEARCH_MAX_RESULTS, SPACE_TICKERS
 
 
+def _clean_text(text: str) -> str:
+    """清理文本中的非 ASCII 特殊字符（如 non-breaking space \xa0）。
+
+    Args:
+        text: 原始文本
+
+    Returns:
+        清理后的文本
+    """
+    if not text:
+        return text
+    # 替换常见的不可见 Unicode 字符
+    return (
+        text.replace("\xa0", " ")       # non-breaking space → 普通空格
+            .replace("​", "")       # zero-width space
+            .replace("﻿", "")       # BOM
+            .replace("‎", "")       # left-to-right mark
+            .replace("‏", "")       # right-to-left mark
+    )
+
+
 def search_web(query: str, max_results: int = WEB_SEARCH_MAX_RESULTS) -> str:
     """使用 DuckDuckGo 搜索互联网，返回格式化的搜索结果。
 
@@ -38,9 +59,9 @@ def search_web(query: str, max_results: int = WEB_SEARCH_MAX_RESULTS) -> str:
 
     lines = [f"=== 互联网搜索结果: 「{query}」 ==="]
     for i, r in enumerate(results, 1):
-        title = r.get("title", "无标题")
+        title = _clean_text(r.get("title", "无标题"))
         href = r.get("href", "")
-        body = r.get("body", "无摘要")
+        body = _clean_text(r.get("body", "无摘要"))
         lines.append(f"\n{i}. {title}")
         lines.append(f"   URL: {href}")
         lines.append(f"   摘要: {body}")
@@ -101,9 +122,9 @@ def get_stock_price(ticker: str) -> str:
 
             high_52w = info.get("fiftyTwoWeekHigh", "N/A")
             low_52w = info.get("fiftyTwoWeekLow", "N/A")
-            name = info.get("longName", t)
-            sector = info.get("sector", "N/A")
-            industry = info.get("industry", "N/A")
+            name = _clean_text(info.get("longName", t))
+            sector = _clean_text(info.get("sector", "N/A"))
+            industry = _clean_text(info.get("industry", "N/A"))
 
             lines = [
                 f"📊 {name} ({t})",
