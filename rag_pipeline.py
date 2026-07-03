@@ -16,8 +16,8 @@ from langchain_core.tools import StructuredTool
 
 from config import (
     LLM_MODEL,
-    GROQ_API_KEY,
-    GROQ_BASE_URL,
+    DEEPSEEK_API_KEY,
+    DEEPSEEK_BASE_URL,
     CHROMA_DB_PATH,
     CHROMA_COLLECTION_NAME,
     RETRIEVER_K,
@@ -31,18 +31,18 @@ from config import (
 
 
 def _create_llm(temperature: float = 0.3) -> ChatOpenAI:
-    """创建 Groq LLM 实例（兼容 OpenAI SDK，免费 tier）。
+    """创建 DeepSeek LLM 实例（兼容 OpenAI SDK）。
 
     Args:
         temperature: 生成温度，分析场景用较低值保证一致性
 
     Returns:
-        ChatOpenAI 实例，指向 Groq API
+        ChatOpenAI 实例，指向 DeepSeek API
     """
     return ChatOpenAI(
         model=LLM_MODEL,
-        api_key=GROQ_API_KEY,
-        base_url=GROQ_BASE_URL,
+        api_key=DEEPSEEK_API_KEY,
+        base_url=DEEPSEEK_BASE_URL,
         temperature=temperature,
         max_tokens=1024,
     )
@@ -129,11 +129,10 @@ def build_rag_chain() -> Tuple[ConversationalRetrievalChain, Any]:
         ValueError: API Key 未配置
     """
     # 校验 API Key
-    if not GROQ_API_KEY:
+    if not DEEPSEEK_API_KEY:
         raise ValueError(
-            "GROQ_API_KEY 未设置。\n"
-            "免费获取：https://console.groq.com → 注册 → API Keys\n"
-            "本地开发：写入 .env 文件 → GROQ_API_KEY=gsk_xxxxx\n"
+            "DEEPSEEK_API_KEY 未设置。\n"
+            "本地开发：写入 .env 文件 → DEEPSEEK_API_KEY=sk-xxxxx\n"
             "Streamlit Cloud：Manage app → Secrets → 填入 TOML 格式密钥后 Reboot"
         )
 
@@ -275,11 +274,10 @@ def build_agent() -> Tuple[AgentExecutor, Any]:
         ValueError: API Key 未配置
     """
     # 校验 API Key
-    if not GROQ_API_KEY:
+    if not DEEPSEEK_API_KEY:
         raise ValueError(
-            "GROQ_API_KEY 未设置。\n"
-            "免费获取：https://console.groq.com → 注册 → API Keys\n"
-            "本地开发：写入 .env 文件 → GROQ_API_KEY=gsk_xxxxx\n"
+            "DEEPSEEK_API_KEY 未设置。\n"
+            "本地开发：写入 .env 文件 → DEEPSEEK_API_KEY=sk-xxxxx\n"
             "Streamlit Cloud：Manage app → Secrets → 填入 TOML 格式密钥后 Reboot"
         )
 
