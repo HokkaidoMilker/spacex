@@ -1,0 +1,111 @@
+"""
+SpaceX 股票分析问答助手 — 统一配置文件
+所有参数集中管理，修改配置只需改此文件。
+"""
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# ============================================================
+# Streamlit Secrets 支持（优先于 .env）
+# ============================================================
+def _get_secret(key: str, default: str = "") -> str:
+    """尝试从 Streamlit Secrets 获取配置，回退到环境变量。
+
+    Streamlit Cloud 通过 st.secrets 管理密钥，本地开发使用 .env。
+    此函数在非 Streamlit 环境下安全回退到 os.getenv。
+
+    Args:
+        key: 配置键名
+        default: 默认值
+
+    Returns:
+        配置值
+    """
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets") and key in st.secrets:
+            return st.secrets[key]
+    except Exception:
+        pass
+    return os.getenv(key, default)
+
+
+# ============================================================
+# LLM 模型（DeepSeek API，兼容 OpenAI SDK）
+# ============================================================
+LLM_MODEL = "deepseek-chat"
+DEEPSEEK_API_KEY = _get_secret("DEEPSEEK_API_KEY")
+DEEPSEEK_BASE_URL = "https://api.deepseek.com"
+
+# ============================================================
+# Embedding 模型（阿里云 DashScope API）
+# ============================================================
+EMBEDDING_MODEL = "text-embedding-v2"
+DASHSCOPE_API_KEY = _get_secret("DASHSCOPE_API_KEY")
+
+# ============================================================
+# 路径配置
+# ============================================================
+CHROMA_DB_PATH = "./chroma_db"
+DOCS_PATH = "./docs"
+PROMPTS_PATH = "./prompts"
+
+# ============================================================
+# 检索参数
+# ============================================================
+RETRIEVER_K = 5            # MMR 最终返回文档数
+RETRIEVER_FETCH_K = 20     # MMR 候选池大小
+CHUNK_SIZE = 800           # 文档切片大小（字符）
+CHUNK_OVERLAP = 100        # 切片重叠量（字符）
+
+# ============================================================
+# 对话参数
+# ============================================================
+MAX_HISTORY_TURNS = 6      # 保留最近 N 轮对话历史
+
+# ============================================================
+# Chroma 配置
+# ============================================================
+CHROMA_COLLECTION_NAME = "spacex_docs"
+
+# ============================================================
+# 工具开关
+# ============================================================
+ENABLE_WEB_SEARCH = True       # 是否启用互联网搜索（DuckDuckGo）
+ENABLE_STOCK_LOOKUP = True     # 是否启用股价查询（yfinance）
+WEB_SEARCH_MAX_RESULTS = 5     # 每次搜索返回条数
+
+# 相关上市公司股票代码（航天/国防赛道）
+SPACE_TICKERS = [
+    "RKLB",   # Rocket Lab
+    "LUNR",   # Intuitive Machines (月球着陆器)
+    "RDW",    # Redwire (太空基础设施)
+    "PL",     # Planet Labs (地球观测)
+    "SPCE",   # Virgin Galactic (太空旅游)
+    "BA",     # Boeing (ULA 合资方)
+    "LMT",    # Lockheed Martin
+    "NOC",    # Northrop Grumman
+    "RTX",    # RTX (Raytheon)
+]
+
+# ============================================================
+# 辅助函数
+# ============================================================
+def load_prompt(filename: str) -> str:
+    """从 prompts/ 目录加载提示词文件内容。
+
+    Args:
+        filename: 提示词文件名（如 'system.txt'）
+
+    Returns:
+        提示词文本内容（UTF-8 编码）
+
+    Raises:
+        FileNotFoundError: 若文件不存在
+    """
+    filepath = os.path.join(PROMPTS_PATH, filename)
+    with open(filepath, "r", encoding="utf-8") as f:
+        return f.read()
