@@ -49,11 +49,13 @@ def _get_secret(key: str, default: str = "") -> str:
 
 
 # ============================================================
-# LLM 模型（DeepSeek API，兼容 OpenAI SDK）
+# LLM 模型（Groq Cloud — 免费 tier，兼容 OpenAI SDK）
 # ============================================================
-LLM_MODEL = "deepseek-chat"
-DEEPSEEK_API_KEY = _get_secret("DEEPSEEK_API_KEY")
-DEEPSEEK_BASE_URL = "https://api.deepseek.com"
+# 注册获取免费 API Key: https://console.groq.com
+# 免费额度：每分钟 30 请求，每天 14,400 请求（日常使用完全够）
+LLM_MODEL = "llama-3.1-8b-instant"
+GROQ_API_KEY = _get_secret("GROQ_API_KEY")
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 
 # ============================================================
 # Embedding 模型（免费本地 FastEmbed，无需 API Key）
