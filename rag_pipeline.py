@@ -44,7 +44,7 @@ def _create_llm(temperature: float = 0.3) -> ChatOpenAI:
         api_key=GROQ_API_KEY,
         base_url=GROQ_BASE_URL,
         temperature=temperature,
-        max_tokens=2048,
+        max_tokens=1024,
     )
 
 
@@ -217,11 +217,7 @@ def _create_agent_tools() -> list:
     kb_tool = StructuredTool.from_function(
         func=_retrieve_knowledge,
         name="retrieve_knowledge",
-        description=(
-            "搜索本地 SpaceX 知识库，获取文档中的历史数据、分析报告、商业模式、技术细节等。"
-            "适用于：SpaceX 基本业务、历史发射数据、Starlink 技术、竞争对手分析框架等非时效性问题。"
-            "输入：自然语言查询语句（中文或英文）"
-        ),
+        description="搜索本地SpaceX知识库获取历史数据与分析报告。输入：中文或英文查询词。",
     )
     tools.append(kb_tool)
 
@@ -231,11 +227,7 @@ def _create_agent_tools() -> list:
         web_tool = StructuredTool.from_function(
             func=search_web,
             name="search_web",
-            description=(
-                "搜索互联网获取最新信息。当用户询问时效性问题（如最新估值、最近发射、新闻动态）"
-                "或知识库中没有足够信息时使用。"
-                "输入：搜索关键词（中文或英文）"
-            ),
+            description="搜索互联网获取最新估值、发射新闻等时效信息。输入：搜索关键词。",
         )
         tools.append(web_tool)
 
@@ -245,12 +237,7 @@ def _create_agent_tools() -> list:
         stock_tool = StructuredTool.from_function(
             func=get_stock_price,
             name="get_stock_price",
-            description=(
-                "查询航天/国防相关上市公司实时股价。支持美股代码如 RKLB (Rocket Lab)、"
-                "LUNR (Intuitive Machines)、BA (Boeing)、LMT (Lockheed Martin)、"
-                "NOC (Northrop Grumman)、SPCE (Virgin Galactic) 等。"
-                "输入：单个股票代码如 'RKLB'，或多个逗号分隔如 'RKLB,LUNR,BA'"
-            ),
+            description="查询上市公司股价。支持RKLB/LUNR/BA/LMT/NOC/SPCE等。输入：股票代码如'RKLB'。",
         )
         tools.append(stock_tool)
 
@@ -327,7 +314,7 @@ def build_agent() -> Tuple[AgentExecutor, Any]:
         tools=tools,
         verbose=True,
         return_intermediate_steps=True,
-        max_iterations=6,
+        max_iterations=3,
         handle_parsing_errors=True,
     )
 
