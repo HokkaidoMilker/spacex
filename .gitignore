@@ -4,8 +4,12 @@
 # Streamlit Secrets（含 API Key）
 .streamlit/secrets.toml
 
-# Chroma 向量库
+# Chroma 向量库（与之配套的 md5 去重记录一并忽略，避免脱离向量库单独存在）
 chroma_db/
+md5.text
+
+# 运行日志
+log/
 
 # Python
 __pycache__/

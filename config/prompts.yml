@@ -1,0 +1,4 @@
+system_prompt_path: prompts/system.txt
+qa_chain_prompt_path: prompts/qa_chain.txt
+retrieval_prompt_path: prompts/retrieval.txt
+classifier_prompt_path: prompts/classifier.txt

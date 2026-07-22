@@ -1,0 +1,7 @@
+enable_web_search: true
+enable_stock_lookup: true
+web_search_max_results: 5
+max_history_turns: 6
+
+# 航天/国防赛道相关上市公司股票代码
+space_tickers: ["RKLB", "LUNR", "RDW", "PL", "SPCE", "BA", "LMT", "NOC", "RTX"]
